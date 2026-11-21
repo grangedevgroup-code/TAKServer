@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 
 import org.apache.catalina.util.URLEncoder;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.owasp.esapi.Validator;
@@ -1974,12 +1975,12 @@ public class MissionApi extends BaseRestController {
 		missionRepository.removeAllKeywordsForMissionUid(mission.getId(), uid);
 
 		StringWriter changes = new StringWriter();
-		changes.append("<uidKeywords uid=\"" + uid + "\">");
+		changes.append("<uidKeywords uid=\"" + StringEscapeUtils.escapeXml10(uid) + "\">");
 
 		for (String keyword : keywords) {
 			try {
 				missionRepository.addMissionUidKeyword(mission.getId(), uid, keyword);
-				changes.append("<uidKeyword keyword=\"" + keyword + "\" />");
+				changes.append("<uidKeyword keyword=\"" + StringEscapeUtils.escapeXml10(keyword) + "\" />");
 			} catch (DataIntegrityViolationException e) {
 				logger.debug("can't add duplicate keyword " + keyword);
 			}
@@ -2045,12 +2046,12 @@ public class MissionApi extends BaseRestController {
 		missionRepository.removeAllKeywordsForMissionResource(mission.getId(), hash);
 
 		StringWriter changes = new StringWriter();
-		changes.append("<contentKeywords hash=\"" + hash + "\">");
+		changes.append("<contentKeywords hash=\"" + StringEscapeUtils.escapeXml10(hash) + "\">");
 
 		for (String keyword : keywords) {
 			try {
 				missionRepository.addMissionResourceKeyword(mission.getId(), hash, keyword);
-				changes.append("<contentKeyword keyword=\"" + keyword + "\" />");
+				changes.append("<contentKeyword keyword=\"" + StringEscapeUtils.escapeXml10(keyword) + "\" />");
 			} catch (DataIntegrityViolationException e) {
 				logger.debug("can't add duplicate keyword " + keyword);
 			}
