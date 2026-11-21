@@ -12,7 +12,7 @@
   "author": "bbn",
   "license": "ISC",
   "dependencies": {
-    "ag-grid": "2.3.7",
+    "ag-grid": "18.1.2",
     "ag-grid-angular": "33.0.3",
     "ag-grid-community": "33.0.3",
     "ag-grid-react": "33.0.3",
