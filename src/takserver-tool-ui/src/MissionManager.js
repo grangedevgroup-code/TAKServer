@@ -456,8 +456,6 @@ function MissionManager() {
       url += "&expiration=" + expiration;
     }
     setApiSent(true);
-    // delete log once complete
-    console.log("making request "+ url)
     fetch(url, requestOptions)
         .then(response => {
           if(!response.ok) console.log("response failed")
