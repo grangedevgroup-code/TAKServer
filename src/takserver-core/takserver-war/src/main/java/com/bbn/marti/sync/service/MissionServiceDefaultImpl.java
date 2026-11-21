@@ -3414,6 +3414,10 @@ public class MissionServiceDefaultImpl implements MissionService {
 	}
 
 	private List<Mission> getMissionsByUidWithSort(boolean passwordProtected, boolean defaultRole, int limit, int offset, String sort, Boolean ascending, String uidFilter, String groupVector) {
+		if (!sort.matches("[A-Za-z_][A-Za-z0-9_]*")) {
+			throw new IllegalArgumentException("invalid sort column");
+		}
+
 		String sql = "select id, create_time, last_edited, name, creatoruid, groups, description, chatroom, base_layer, bbox, path, classification, tool, password_hash, expiration, bounding_polygon, invite_only, guid "
 				+ "from mission inner join mission_uid on mission.id = mission_uid.mission_id where invite_only = false and "
 				+ "((:passwordProtected = false and password_hash is null) or :passwordProtected = true) "
