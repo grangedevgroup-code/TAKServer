@@ -52,6 +52,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.XPath;
 import org.dom4j.io.SAXReader;
+import org.xml.sax.SAXException;
 import org.owasp.esapi.Validator;
 import org.owasp.esapi.errors.ValidationException;
 import org.slf4j.Logger;
@@ -1773,24 +1774,33 @@ public class DistributedSubscriptionManager implements SubscriptionManager, org.
 		return new CotEventContainer(groupChangeMessage);
 	}
 
+	private static SAXReader secureReader() throws SAXException {
+		SAXReader reader = new SAXReader();
+		reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+		reader.setFeature("http://xml.org/sax/features/external-general-entities", false);
+		reader.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+		reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+		return reader;
+	}
+
 	private static void addMissionXml(Document document, String xml) {
 		try {
-			SAXReader reader = new SAXReader();
+			SAXReader reader = secureReader();
 			Document xmlDoc = reader.read(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
 			Element missionElem = DocumentHelper.makeElement(document, missionXPath);
 			missionElem.add(xmlDoc.getRootElement());
-		} catch (DocumentException ex) {
+		} catch (DocumentException | SAXException ex) {
 			logger.error("Exception attaching mission xml to message!", ex);
 		}
 	}
 
 	private static void addMissionChangeContentXml(Document document, String xml) {
 		try {
-			SAXReader reader = new SAXReader();
+			SAXReader reader = secureReader();
 			Document xmlDoc = reader.read(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
 			Element missionElem = DocumentHelper.makeElement(document, missionContentXPath);
 			missionElem.add(xmlDoc.getRootElement());
-		} catch (DocumentException ex) {
+		} catch (DocumentException | SAXException ex) {
 			logger.error("Exception attaching xml to mission change!", ex);
 		}
 	}
